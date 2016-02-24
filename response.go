@@ -5,7 +5,7 @@ import ()
 type Response struct {
 	A, B               interface{}
 	Overlap            float64
-	overlapN, overlapV Vector
+	OverlapN, OverlapV Vector
 	AInB, BInA         bool
 }
 

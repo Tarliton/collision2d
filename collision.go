@@ -33,8 +33,8 @@ func TestCircleCircle(a, b Circle, response *Response) bool {
 		response.A = a
 		response.B = b
 		response.Overlap = totalRadius - dist
-		response.overlapN.Copy(differenceV.Normalize())
-		response.overlapV.Copy(differenceV).Scale(response.Overlap)
+		response.OverlapN.Copy(differenceV.Normalize())
+		response.OverlapV.Copy(differenceV).Scale(response.Overlap)
 		response.AInB = a.R <= b.R && dist <= b.R-a.R
 		response.BInA = b.R <= a.R && dist <= a.R-b.R
 	}
@@ -64,7 +64,7 @@ func TestPolygonCircle(polygon Polygon, circle Circle, response *Response) bool 
 			prev = i - 1
 		}
 		overlap := 0.0
-		overlapN := Vector{}
+		OverlapN := Vector{}
 		edge.Copy(polygon.Edges[i])
 		point.Copy(circlePos).Sub(calcPoints[i])
 		if response != nil && point.Len2() > radius2 {
@@ -82,7 +82,7 @@ func TestPolygonCircle(polygon Polygon, circle Circle, response *Response) bool 
 					return false
 				} else if response != nil {
 					response.BInA = false
-					overlapN.Copy(point.Normalize())
+					OverlapN.Copy(point.Normalize())
 					overlap = radius - dist
 				}
 			}
@@ -97,7 +97,7 @@ func TestPolygonCircle(polygon Polygon, circle Circle, response *Response) bool 
 					return false
 				} else if response != nil {
 					response.BInA = false
-					overlapN.Copy(point.Normalize())
+					OverlapN.Copy(point.Normalize())
 					overlap = radius - dist
 				}
 			}
@@ -108,7 +108,7 @@ func TestPolygonCircle(polygon Polygon, circle Circle, response *Response) bool 
 			if dist > 0 && distAbs > radius {
 				return false
 			} else if response != nil {
-				overlapN.Copy(normal)
+				OverlapN.Copy(normal)
 				overlap = radius - dist
 				if dist >= 0 || overlap < 2*radius {
 					response.BInA = false
@@ -118,14 +118,14 @@ func TestPolygonCircle(polygon Polygon, circle Circle, response *Response) bool 
 
 		if response != nil && math.Abs(overlap) < math.Abs(response.Overlap) {
 			response.Overlap = overlap
-			response.overlapN.Copy(overlapN)
+			response.OverlapN.Copy(OverlapN)
 		}
 	}
 
 	if response != nil {
 		response.A = polygon
 		response.B = circle
-		response.overlapV.Copy(response.overlapN).Scale(response.Overlap)
+		response.OverlapV.Copy(response.OverlapN).Scale(response.Overlap)
 	}
 	return true
 }
@@ -135,8 +135,8 @@ func TestCirclePolygon(circle Circle, polygon Polygon, response *Response) bool 
 	if result && response != nil {
 		a := response.A
 		aInB := response.AInB
-		response.overlapN.Reverse()
-		response.overlapV.Reverse()
+		response.OverlapN.Reverse()
+		response.OverlapV.Reverse()
 		response.A = response.B
 		response.B = a
 		response.AInB = response.BInA
@@ -166,7 +166,7 @@ func TestPolygonPolygon(a, b Polygon, response *Response) bool {
 	if response != nil {
 		response.A = a
 		response.B = b
-		response.overlapV.Copy(response.overlapN).Scale(response.Overlap)
+		response.OverlapV.Copy(response.OverlapN).Scale(response.Overlap)
 	}
 	return true
 }
@@ -181,4 +181,78 @@ func voronoiRegion(line, point Vector) int {
 	} else {
 		return MIDDLE_VORONOI_REGION
 	}
+}
+
+func isSeparatingAxis(aPos, bPos Vector, aPoints, bPoints []Vector, axis Vector, response *Response) bool {
+	rangeA := []float64{}
+	rangeB := []float64{}
+	offsetV := Vector{}.Copy(bPos).Sub(aPos)
+	projectedOffset := offsetV.Dot(axis)
+	flattenPointsOn(aPoints, axis, rangeA)
+	flattenPointsOn(bPoints, axis, rangeB)
+	rangeB[0] += projectedOffset
+	rangeB[1] += projectedOffset
+	if rangeA[0] > rangeB[1] || rangeB[0] > rangeA[1] {
+		return true
+	}
+
+	if response != nil {
+		overlap := 0.0
+		if rangeA[0] < rangeB[0] {
+			response.AInB = false
+			if rangeA[1] < rangeB[1] {
+				overlap = rangeA[1] - rangeB[0]
+				response.BInA = false
+			} else {
+				option1 := rangeA[1] - rangeB[0]
+				option2 := rangeB[1] - rangeA[0]
+				if option1 < option2 {
+					overlap = option1
+				} else {
+					overlap = -option2
+				}
+			}
+		} else {
+			response.BInA = false
+			if rangeA[1] > rangeB[1] {
+				overlap = rangeA[0] - rangeB[1]
+				response.AInB = false
+			} else {
+				option1 := rangeA[1] - rangeB[0]
+				option2 := rangeB[1] - rangeA[0]
+				if option1 < option2 {
+					overlap = option1
+				} else {
+					overlap = -option2
+				}
+			}
+		}
+
+		absOverlap := math.Abs(overlap)
+		if absOverlap < response.Overlap {
+			response.Overlap = absOverlap
+			response.OverlapN.Copy(axis)
+			if overlap < 0 {
+				response.OverlapN.Reverse()
+			}
+		}
+	}
+	return false
+}
+
+func flattenPointsOn(points []Vector, normal Vector, result []float64) {
+	min := math.Inf(1)
+	max := math.Inf(-1)
+	length := len(points)
+	for i := 0; i < length; i++ {
+		dot := points[i].Dot(normal)
+		if dot < min {
+			min = dot
+		}
+		if dot > max {
+			max = dot
+		}
+	}
+	result[0] = min
+	result[1] = max
 }
