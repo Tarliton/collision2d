@@ -8,6 +8,17 @@ type Vector struct {
 	X, Y float64
 }
 
+func (vector Vector) Copy(other Vector) Vector {
+	vector.X = other.X
+	vector.Y = other.Y
+	return vector
+}
+
+func (vector Vector) Clone() Vector {
+	another := vector
+	return another
+}
+
 func (vector Vector) Perp() Vector {
 	x := vector.X
 	vector.X = vector.Y
@@ -56,7 +67,7 @@ func (vector Vector) Scale(x float64) Vector {
 	return vector
 }
 
-func (vector Vector) ScaleDifferent(x float64, y float64) Vector {
+func (vector Vector) ScaleDifferent(x, y float64) Vector {
 	vector.X *= x
 	vector.Y *= y
 	return vector
