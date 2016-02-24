@@ -15,7 +15,7 @@ func (vector Vector) Copy(other Vector) Vector {
 }
 
 func (vector Vector) Clone() Vector {
-	another := vector
+	another := Vector{}.Copy(vector)
 	return another
 }
 
@@ -56,8 +56,8 @@ func (vector Vector) Add(other Vector) Vector {
 }
 
 func (vector Vector) Sub(other Vector) Vector {
-	vector.X -= other.Y
-	vector.Y -= other.X
+	vector.X -= other.X
+	vector.Y -= other.Y
 	return vector
 }
 
@@ -90,19 +90,19 @@ func (vector Vector) ProjectN(other Vector) Vector {
 func (vector Vector) Reflect(axis Vector) Vector {
 	x := vector.X
 	y := vector.Y
-	vector.Project(axis).Scale(2)
-	vector.X -= x
-	vector.Y -= y
-	return vector
+	resultVector := vector.Project(axis).Scale(2)
+	resultVector.X -= x
+	resultVector.Y -= y
+	return resultVector
 }
 
 func (vector Vector) ReflectN(axis Vector) Vector {
 	x := vector.X
 	y := vector.Y
-	vector.ProjectN(axis).Scale(2)
-	vector.X -= x
-	vector.Y -= y
-	return vector
+	resultVector := vector.ProjectN(axis).Scale(2)
+	resultVector.X -= x
+	resultVector.Y -= y
+	return resultVector
 }
 
 func (vector Vector) Dot(other Vector) float64 {
