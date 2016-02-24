@@ -17,6 +17,6 @@ func (box Box) ToPolygon() Polygon {
 	points = append(points, Vector{w, 0})
 	points = append(points, Vector{w, h})
 	points = append(points, Vector{0, h})
-	polygon := Polygon{vector, Vector{}, 0, points, []Vector{}, []Vector{}, []Vector{}}
+	polygon := Polygon{vector, Vector{}, 0, []Vector{}, []Vector{}, []Vector{}, []Vector{}}.SetPoints(points)
 	return polygon
 }

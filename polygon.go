@@ -18,6 +18,9 @@ func (polygon Polygon) SetPoints(points []Vector) Polygon {
 		normals = append(normals, Vector{})
 	}
 	polygon.Points = points
+	polygon.CalcPoints = calcPoints
+	polygon.Edges = edges
+	polygon.Normals = normals
 	polygon.recalc()
 	return polygon
 }
@@ -77,7 +80,7 @@ func (polygon Polygon) GetAABB() Polygon {
 	return box.ToPolygon()
 }
 
-func (polygon Polygon) recalc() Polygon {
+func (polygon *Polygon) recalc() {
 	calcPoints := polygon.CalcPoints
 	edges := polygon.Edges
 	normals := polygon.Normals
@@ -92,6 +95,7 @@ func (polygon Polygon) recalc() Polygon {
 		if angle != 0 {
 			calcPoint.Rotate(angle)
 		}
+		calcPoints[i] = calcPoints[i].Copy(calcPoint)
 	}
 	for i := 0; i < length; i++ {
 		p1 := calcPoints[i]
@@ -101,8 +105,13 @@ func (polygon Polygon) recalc() Polygon {
 		} else {
 			p2 = calcPoints[0]
 		}
-		e := edges[i].Copy(p2).Sub(p1)
-		normals[i].Copy(e).Perp().Normalize()
+		edges[i] = edges[i].Copy(p2).Sub(p1)
+		normals[i] = normals[i].Copy(edges[i]).Perp().Normalize()
 	}
-	return polygon
+	polygon.CalcPoints = calcPoints
+	polygon.Edges = edges
+	polygon.Points = points
+	polygon.Normals = normals
+	polygon.Offset = offset
+	polygon.Angle = angle
 }

@@ -22,7 +22,7 @@ func (vector Vector) Clone() Vector {
 func (vector Vector) Perp() Vector {
 	x := vector.X
 	vector.X = vector.Y
-	vector.Y = x
+	vector.Y = -x
 	return vector
 }
 

@@ -1,6 +1,8 @@
 package sat
 
-import ()
+import (
+	"math"
+)
 
 type Response struct {
 	A, B               interface{}
@@ -9,9 +11,8 @@ type Response struct {
 	AInB, BInA         bool
 }
 
-func (response Response) Clear() Response {
+func (response *Response) Clear() {
 	response.AInB = true
 	response.BInA = true
-	response.Overlap = 0
-	return response
+	response.Overlap = math.MaxFloat64
 }

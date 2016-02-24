@@ -13,7 +13,7 @@ func PointInCircle(p Vector, c Circle) bool {
 
 func PointInPolygon(p Vector, poly Polygon) bool {
 	polygon := Box{Vector{}, 1, 1}.ToPolygon()
-	polygon.Pos.Copy(p)
+	polygon.Pos = polygon.Pos.Copy(p)
 	response := new(Response)
 	result := TestPolygonPolygon(polygon, poly, response)
 	return result
@@ -33,8 +33,8 @@ func TestCircleCircle(a, b Circle, response *Response) bool {
 		response.A = a
 		response.B = b
 		response.Overlap = totalRadius - dist
-		response.OverlapN.Copy(differenceV.Normalize())
-		response.OverlapV.Copy(differenceV).Scale(response.Overlap)
+		response.OverlapN = response.OverlapN.Copy(differenceV.Normalize())
+		response.OverlapV = response.OverlapV.Copy(differenceV.Normalize()).Scale(response.Overlap)
 		response.AInB = a.R <= b.R && dist <= b.R-a.R
 		response.BInA = b.R <= a.R && dist <= a.R-b.R
 	}
@@ -64,40 +64,43 @@ func TestPolygonCircle(polygon Polygon, circle Circle, response *Response) bool 
 			prev = i - 1
 		}
 		overlap := 0.0
-		OverlapN := Vector{}
-		edge.Copy(polygon.Edges[i])
-		point.Copy(circlePos).Sub(calcPoints[i])
+		overlapN := Vector{}
+		changedOverlapN := false
+		edge = edge.Copy(polygon.Edges[i])
+		point = point.Copy(circlePos).Sub(calcPoints[i])
 		if response != nil && point.Len2() > radius2 {
 			response.AInB = false
 		}
 		region := voronoiRegion(edge, point)
 
 		if region == LEFT_VORONOI_REGION {
-			edge.Copy(polygon.Edges[prev])
+			edge = edge.Copy(polygon.Edges[prev])
 			point2 := Vector{}.Copy(circlePos).Sub(calcPoints[prev])
-			region := voronoiRegion(edge, point2)
-			if region == RIGHT_VORONOI_REGION {
+			region2 := voronoiRegion(edge, point2)
+			if region2 == RIGHT_VORONOI_REGION {
 				dist := point.Len()
 				if dist > radius {
 					return false
 				} else if response != nil {
 					response.BInA = false
-					OverlapN.Copy(point.Normalize())
+					overlapN = overlapN.Copy(point.Normalize())
+					changedOverlapN = true
 					overlap = radius - dist
 				}
 			}
 		} else if region == RIGHT_VORONOI_REGION {
-			edge.Copy(polygon.Edges[next])
-			point.Copy(circlePos).Sub(calcPoints[next])
-			region = voronoiRegion(edge, point)
+			edge = edge.Copy(polygon.Edges[next])
+			point = point.Copy(circlePos).Sub(calcPoints[next])
+			region2 := voronoiRegion(edge, point)
 
-			if region == LEFT_VORONOI_REGION {
+			if region2 == LEFT_VORONOI_REGION {
 				dist := point.Len()
 				if dist > radius {
 					return false
 				} else if response != nil {
 					response.BInA = false
-					OverlapN.Copy(point.Normalize())
+					overlapN = overlapN.Copy(point.Normalize())
+					changedOverlapN = true
 					overlap = radius - dist
 				}
 			}
@@ -108,24 +111,24 @@ func TestPolygonCircle(polygon Polygon, circle Circle, response *Response) bool 
 			if dist > 0 && distAbs > radius {
 				return false
 			} else if response != nil {
-				OverlapN.Copy(normal)
+				overlapN = overlapN.Copy(normal)
+				changedOverlapN = true
 				overlap = radius - dist
 				if dist >= 0 || overlap < 2*radius {
 					response.BInA = false
 				}
 			}
 		}
-
-		if response != nil && math.Abs(overlap) < math.Abs(response.Overlap) {
+		if changedOverlapN && response != nil && math.Abs(overlap) < math.Abs(response.Overlap) {
 			response.Overlap = overlap
-			response.OverlapN.Copy(OverlapN)
+			response.OverlapN = response.OverlapN.Copy(overlapN)
 		}
 	}
 
 	if response != nil {
 		response.A = polygon
 		response.B = circle
-		response.OverlapV.Copy(response.OverlapN).Scale(response.Overlap)
+		response.OverlapV = response.OverlapV.Copy(response.OverlapN).Scale(response.Overlap)
 	}
 	return true
 }
@@ -135,8 +138,8 @@ func TestCirclePolygon(circle Circle, polygon Polygon, response *Response) bool 
 	if result && response != nil {
 		a := response.A
 		aInB := response.AInB
-		response.OverlapN.Reverse()
-		response.OverlapV.Reverse()
+		response.OverlapN = response.OverlapN.Reverse()
+		response.OverlapV = response.OverlapV.Reverse()
 		response.A = response.B
 		response.B = a
 		response.AInB = response.BInA
@@ -153,12 +156,14 @@ func TestPolygonPolygon(a, b Polygon, response *Response) bool {
 
 	for i := 0; i < aLen; i++ {
 		if isSeparatingAxis(a.Pos, b.Pos, aPoints, bPoints, a.Normals[i], response) {
+
 			return false
 		}
 	}
 
 	for i := 0; i < bLen; i++ {
 		if isSeparatingAxis(a.Pos, b.Pos, aPoints, bPoints, b.Normals[i], response) {
+
 			return false
 		}
 	}
@@ -184,12 +189,10 @@ func voronoiRegion(line, point Vector) int {
 }
 
 func isSeparatingAxis(aPos, bPos Vector, aPoints, bPoints []Vector, axis Vector, response *Response) bool {
-	rangeA := []float64{}
-	rangeB := []float64{}
 	offsetV := Vector{}.Copy(bPos).Sub(aPos)
 	projectedOffset := offsetV.Dot(axis)
-	flattenPointsOn(aPoints, axis, rangeA)
-	flattenPointsOn(bPoints, axis, rangeB)
+	rangeA := flattenPointsOn(aPoints, axis)
+	rangeB := flattenPointsOn(bPoints, axis)
 	rangeB[0] += projectedOffset
 	rangeB[1] += projectedOffset
 	if rangeA[0] > rangeB[1] || rangeB[0] > rangeA[1] {
@@ -240,12 +243,14 @@ func isSeparatingAxis(aPos, bPos Vector, aPoints, bPoints []Vector, axis Vector,
 	return false
 }
 
-func flattenPointsOn(points []Vector, normal Vector, result []float64) {
-	min := math.Inf(1)
-	max := math.Inf(-1)
+func flattenPointsOn(points []Vector, normal Vector) []float64 {
+	result := []float64{0, 0, 0, 0, 0, 0, 0}
+	min := math.MaxFloat64
+	max := -math.MaxFloat64
 	length := len(points)
 	for i := 0; i < length; i++ {
 		dot := points[i].Dot(normal)
+
 		if dot < min {
 			min = dot
 		}
@@ -255,4 +260,5 @@ func flattenPointsOn(points []Vector, normal Vector, result []float64) {
 	}
 	result[0] = min
 	result[1] = max
+	return result
 }
