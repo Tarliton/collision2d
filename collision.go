@@ -1,4 +1,4 @@
-package sat
+package collision2d
 
 import (
 	"math"
@@ -73,11 +73,11 @@ func TestPolygonCircle(polygon Polygon, circle Circle, response *Response) bool 
 		}
 		region := voronoiRegion(edge, point)
 
-		if region == LEFT_VORONOI_REGION {
+		if region == leftVoronoiRegion {
 			edge = edge.Copy(polygon.Edges[prev])
 			point2 := Vector{}.Copy(circlePos).Sub(calcPoints[prev])
 			region2 := voronoiRegion(edge, point2)
-			if region2 == RIGHT_VORONOI_REGION {
+			if region2 == rightVoronoiRegion {
 				dist := point.Len()
 				if dist > radius {
 					return false
@@ -88,12 +88,12 @@ func TestPolygonCircle(polygon Polygon, circle Circle, response *Response) bool 
 					overlap = radius - dist
 				}
 			}
-		} else if region == RIGHT_VORONOI_REGION {
+		} else if region == rightVoronoiRegion {
 			edge = edge.Copy(polygon.Edges[next])
 			point = point.Copy(circlePos).Sub(calcPoints[next])
 			region2 := voronoiRegion(edge, point)
 
-			if region2 == LEFT_VORONOI_REGION {
+			if region2 == leftVoronoiRegion {
 				dist := point.Len()
 				if dist > radius {
 					return false
@@ -180,11 +180,11 @@ func voronoiRegion(line, point Vector) int {
 	len2 := line.Len2()
 	dp := point.Dot(line)
 	if dp < 0 {
-		return LEFT_VORONOI_REGION
+		return leftVoronoiRegion
 	} else if dp > len2 {
-		return RIGHT_VORONOI_REGION
+		return rightVoronoiRegion
 	} else {
-		return MIDDLE_VORONOI_REGION
+		return middleVoronoiRegion
 	}
 }
 

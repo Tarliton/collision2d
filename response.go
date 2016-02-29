@@ -1,4 +1,4 @@
-package sat
+package collision2d
 
 import (
 	"math"

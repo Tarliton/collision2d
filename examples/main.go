@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	sat "github.com/tarliton/sat-go"
+	"github.com/tarliton/collision2d"
 )
 
 func main() {

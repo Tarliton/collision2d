@@ -1,6 +1,4 @@
-package sat
-
-import ()
+package collision2d
 
 type Polygon struct {
 	Pos, Offset                        Vector
