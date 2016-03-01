@@ -1,10 +1,18 @@
 package collision2d
 
+import (
+	"fmt"
+)
+
 //Polygon struct represents a polygon with position and edges in a counter-clockwise fashion.
 type Polygon struct {
 	Pos, Offset                        Vector
 	Angle                              float64
 	Points, CalcPoints, Edges, Normals []Vector
+}
+
+func (polygon Polygon) String() string {
+	return fmt.Sprintf("{Pos:%sOffset:%sAngle: %f\nPoints: %s}", polygon.Pos, polygon.Offset, polygon.Angle, polygon.Points)
 }
 
 //SetPoints change the edges of the polygon and recauculate the rest of it's values.

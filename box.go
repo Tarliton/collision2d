@@ -1,9 +1,17 @@
 package collision2d
 
+import (
+	"fmt"
+)
+
 //Box is a simple box with position, width and heigth.
 type Box struct {
 	Pos  Vector
 	W, H float64
+}
+
+func (box Box) String() string {
+	return fmt.Sprintf("{Pos:%sWidth:%f\nHeight:%f}", box.Pos, box.W, box.H)
 }
 
 //ToPolygon returns a new polygon whose edges are the edges of the box.

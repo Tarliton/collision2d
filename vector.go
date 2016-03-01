@@ -1,12 +1,17 @@
 package collision2d
 
 import (
+	"fmt"
 	"math"
 )
 
 //Vector is a simple 2D vector/point struct.
 type Vector struct {
 	X, Y float64
+}
+
+func (vector Vector) String() string {
+	return fmt.Sprintf("{X:%f, Y:%f}\n", vector.X, vector.Y)
 }
 
 //NewVector create a new vector with the values of x and y

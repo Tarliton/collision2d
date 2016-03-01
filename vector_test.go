@@ -1,11 +1,18 @@
 package collision2d_test
 
 import (
+	// "fmt"
 	"github.com/Tarliton/collision2d"
 	"github.com/stretchr/testify/assert"
 	"math"
 	"testing"
 )
+
+func TestVectorString(t *testing.T) {
+	vector := collision2d.NewVector(0, 0)
+	output := string(vector.String())
+	assert.Equal(t, "{X:0.000000, Y:0.000000}\n", output, "they should be equal")
+}
 
 func TestCreateVectorXZeros(t *testing.T) {
 	vector := collision2d.NewVector(0, 0)
