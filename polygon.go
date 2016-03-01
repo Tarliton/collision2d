@@ -43,7 +43,7 @@ func (polygon Polygon) SetOffset(offset Vector) Polygon {
 func (polygon Polygon) Rotate(angle float64) Polygon {
 	points := polygon.Points
 	for i := 0; i < len(points); i++ {
-		points[i].Rotate(angle)
+		points[i] = points[i].Rotate(angle)
 	}
 	polygon.recalc()
 	return polygon

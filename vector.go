@@ -10,8 +10,8 @@ type Vector struct {
 }
 
 //NewVector create a new vector with the values of x and y
-func NewVector(x, y float64) *Vector {
-	return &Vector{X: x, Y: y}
+func NewVector(x, y float64) Vector {
+	return Vector{X: x, Y: y}
 }
 
 //Copy the value of other vector to a new one.

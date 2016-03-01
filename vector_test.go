@@ -8,13 +8,13 @@ import (
 )
 
 func TestCreateVectorXZeros(t *testing.T) {
-	vector := collision2d.Vector{}
+	vector := collision2d.NewVector(0, 0)
 	assert.Equal(t, float64(0), vector.X, "they should be equal")
 	assert.Equal(t, float64(0), vector.Y, "they should be equal")
 }
 
 func TestCreateVectorXNumber(t *testing.T) {
-	vector := collision2d.Vector{15.12312, 12312.1}
+	vector := collision2d.NewVector(15.12312, 12312.1)
 	assert.Equal(t, float64(15.12312), vector.X, "they should be equal")
 	assert.Equal(t, float64(12312.1), vector.Y, "they should be equal")
 }
