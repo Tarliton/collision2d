@@ -4,6 +4,7 @@ import (
 	"math"
 )
 
+//PointInCircle returns true if the point is inside the circle.
 func PointInCircle(p Vector, c Circle) bool {
 	differenceV := Vector{}.Copy(p).Sub(c.Pos)
 	radiusSqr := c.R * c.R
@@ -11,6 +12,7 @@ func PointInCircle(p Vector, c Circle) bool {
 	return distanceSqr <= radiusSqr
 }
 
+//PointInPolygon returns true if the point is inside a polygon.
 func PointInPolygon(p Vector, poly Polygon) bool {
 	polygon := Box{Vector{}, 1, 1}.ToPolygon()
 	polygon.Pos = polygon.Pos.Copy(p)
@@ -19,6 +21,7 @@ func PointInPolygon(p Vector, poly Polygon) bool {
 	return result
 }
 
+//TestCircleCircle returns true if the circles collide with each other.
 func TestCircleCircle(a, b Circle, response *Response) bool {
 	differenceV := Vector{}.Copy(b.Pos).Sub(a.Pos)
 	totalRadius := a.R + b.R
@@ -41,6 +44,7 @@ func TestCircleCircle(a, b Circle, response *Response) bool {
 	return true
 }
 
+//TestPolygonCircle returns true if the polygon collides with the circle.
 func TestPolygonCircle(polygon Polygon, circle Circle, response *Response) bool {
 	circlePos := Vector{}.Copy(circle.Pos).Sub(polygon.Pos)
 	radius := circle.R
@@ -133,6 +137,7 @@ func TestPolygonCircle(polygon Polygon, circle Circle, response *Response) bool 
 	return true
 }
 
+//TestCirclePolygon returns true if the circle collides with the polygon.
 func TestCirclePolygon(circle Circle, polygon Polygon, response *Response) bool {
 	result := TestPolygonCircle(polygon, circle, response)
 	if result && response != nil {
@@ -148,6 +153,7 @@ func TestCirclePolygon(circle Circle, polygon Polygon, response *Response) bool 
 	return result
 }
 
+//TestPolygonPolygon returns true if the polygons collide with each other.
 func TestPolygonPolygon(a, b Polygon, response *Response) bool {
 	aPoints := a.CalcPoints
 	aLen := len(aPoints)

@@ -1,10 +1,12 @@
 package collision2d
 
+//Box is a simple box with position, width and heigth.
 type Box struct {
 	Pos  Vector
 	W, H float64
 }
 
+//ToPolygon returns a new polygon whose edges are the edges of the box.
 func (box Box) ToPolygon() Polygon {
 	pos := box.Pos
 	w := box.W

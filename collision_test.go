@@ -47,8 +47,7 @@ func TestTestCircleCircle(t *testing.T) {
 func TestTestPolygonCircle(t *testing.T) {
 	polygon := collision2d.Polygon{collision2d.Vector{0, 0}, collision2d.Vector{}, 0, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}}.SetPoints([]collision2d.Vector{collision2d.Vector{}, collision2d.Vector{40, 0}, collision2d.Vector{40, 40}, collision2d.Vector{0, 40}})
 	circle := collision2d.Circle{collision2d.Vector{50, 50}, 20}
-	response := new(collision2d.Response)
-	response.Clear()
+	response := collision2d.NewResponse()
 	result := collision2d.TestPolygonCircle(polygon, circle, response)
 	assert.Equal(t, true, result, "they should be equal")
 	assert.Equal(t, float64(5.857864376269049), response.Overlap, "they should be equal")
@@ -59,8 +58,7 @@ func TestTestPolygonCircle(t *testing.T) {
 func TestTestCirclePolygon(t *testing.T) {
 	polygon := collision2d.Polygon{collision2d.Vector{0, 0}, collision2d.Vector{}, 0, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}}.SetPoints([]collision2d.Vector{collision2d.Vector{}, collision2d.Vector{40, 0}, collision2d.Vector{40, 40}, collision2d.Vector{0, 40}})
 	circle := collision2d.Circle{collision2d.Vector{50, 50}, 20}
-	response := new(collision2d.Response)
-	response.Clear()
+	response := collision2d.NewResponse()
 	result := collision2d.TestCirclePolygon(circle, polygon, response)
 	assert.Equal(t, true, result, "they should be equal")
 	assert.Equal(t, float64(5.857864376269049), response.Overlap, "they should be equal")
@@ -70,8 +68,7 @@ func TestTestCirclePolygon(t *testing.T) {
 
 func TestTestPolygonPolygon(t *testing.T) {
 	polygon := collision2d.Polygon{collision2d.Vector{0, 0}, collision2d.Vector{}, 0, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}}.SetPoints([]collision2d.Vector{collision2d.Vector{}, collision2d.Vector{40, 0}, collision2d.Vector{40, 40}, collision2d.Vector{0, 40}})
-	response := new(collision2d.Response)
-	response.Clear()
+	response := collision2d.NewResponse()
 	result := collision2d.TestPolygonPolygon(polygon, polygon, response)
 	assert.Equal(t, true, result, "they should be equal")
 	assert.Equal(t, float64(40), response.Overlap, "they should be equal")

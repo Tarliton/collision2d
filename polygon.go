@@ -1,11 +1,13 @@
 package collision2d
 
+//Polygon struct represents a polygon with position and edges in a counter-clockwise fashion.
 type Polygon struct {
 	Pos, Offset                        Vector
 	Angle                              float64
 	Points, CalcPoints, Edges, Normals []Vector
 }
 
+//SetPoints change the edges of the polygon and recauculate the rest of it's values.
 func (polygon Polygon) SetPoints(points []Vector) Polygon {
 	calcPoints := polygon.CalcPoints
 	edges := polygon.Edges
@@ -23,18 +25,21 @@ func (polygon Polygon) SetPoints(points []Vector) Polygon {
 	return polygon
 }
 
+//SetAngle changes the angle of the polygon
 func (polygon Polygon) SetAngle(angle float64) Polygon {
 	polygon.Angle = angle
 	polygon.recalc()
 	return polygon
 }
 
+//SetOffset changes the offset of the polygon
 func (polygon Polygon) SetOffset(offset Vector) Polygon {
 	polygon.Offset = offset
 	polygon.recalc()
 	return polygon
 }
 
+//Rotate rotates the polygon by angle in radian.
 func (polygon Polygon) Rotate(angle float64) Polygon {
 	points := polygon.Points
 	for i := 0; i < len(points); i++ {
@@ -44,6 +49,7 @@ func (polygon Polygon) Rotate(angle float64) Polygon {
 	return polygon
 }
 
+//Translate the polygon by x and y.
 func (polygon Polygon) Translate(x, y float64) Polygon {
 	points := polygon.Points
 	for i := 0; i < len(points); i++ {
@@ -54,6 +60,7 @@ func (polygon Polygon) Translate(x, y float64) Polygon {
 	return polygon
 }
 
+//GetAABB returns the axis-aligned bounding box of the polygon.
 func (polygon Polygon) GetAABB() Polygon {
 	calcPoints := polygon.CalcPoints
 	xMin := calcPoints[0].X

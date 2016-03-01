@@ -125,17 +125,17 @@ func (vector Vector) ReflectN(axis Vector) Vector {
 	return resultVector
 }
 
-//Dot return the dot product of this vector and another
+//Dot returns the dot product of this vector and another
 func (vector Vector) Dot(other Vector) float64 {
 	return vector.X*other.X + vector.Y*other.Y
 }
 
-//Len2 return the squared length of this vector
+//Len2 returns the squared length of this vector
 func (vector Vector) Len2() float64 {
 	return vector.Dot(vector)
 }
 
-//Len return the length of this vector
+//Len returns the length of this vector
 func (vector Vector) Len() float64 {
 	return math.Sqrt(vector.Len2())
 }

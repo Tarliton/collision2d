@@ -4,6 +4,7 @@ import (
 	"math"
 )
 
+//Response contains the information about an collision test.
 type Response struct {
 	A, B               interface{}
 	Overlap            float64
@@ -11,8 +12,7 @@ type Response struct {
 	AInB, BInA         bool
 }
 
-func (response *Response) Clear() {
-	response.AInB = true
-	response.BInA = true
-	response.Overlap = math.MaxFloat64
+//NewResponse is used to create a new response when necessary.
+func NewResponse() *Response {
+	return &Response{Overlap: math.MaxFloat64, AInB: true, BInA: true}
 }
