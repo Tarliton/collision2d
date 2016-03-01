@@ -1,8 +1,8 @@
 package collision2d_test
 
 import (
+	"github.com/Tarliton/collision2d"
 	"github.com/stretchr/testify/assert"
-	"github.com/tarliton/collision2d"
 	"testing"
 )
 
