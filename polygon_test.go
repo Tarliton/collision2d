@@ -37,8 +37,14 @@ func TestTranslate(t *testing.T) {
 	assert.Equal(t, []collision2d.Vector{collision2d.Vector{X: 5.5, Y: 9.2}, collision2d.Vector{X: 15.5, Y: 9.2}, collision2d.Vector{X: 15.5, Y: 19.2}, collision2d.Vector{X: 5.5, Y: 19.2}}, polygon.Points, "they should be equal")
 }
 
-func TestGetAABBPolygon(t *testing.T) {
+func TestGetAABBPolygonOne(t *testing.T) {
 	polygon := collision2d.Polygon{collision2d.Vector{5, 5}, collision2d.Vector{}, 0, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}}.SetPoints([]collision2d.Vector{collision2d.Vector{}, collision2d.Vector{10, 0}, collision2d.Vector{10, 10}, collision2d.Vector{0, 10}})
 	polygonAABB := polygon.GetAABB()
 	assert.Equal(t, polygon, polygonAABB, "they should be equal")
+}
+
+func TestGetAABBPolygonTwo(t *testing.T) {
+	polygon := collision2d.Polygon{collision2d.Vector{5, 5}, collision2d.Vector{}, 0, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}}.SetPoints([]collision2d.Vector{collision2d.Vector{10, 10}, collision2d.Vector{0, 10}, collision2d.Vector{0, 0}, collision2d.Vector{10, 0}})
+	polygonAABB := polygon.GetAABB()
+	assert.Equal(t, collision2d.Polygon{Pos: collision2d.Vector{X: 5, Y: 5}, Offset: collision2d.Vector{X: 0, Y: 0}, Angle: 0, Points: []collision2d.Vector{collision2d.Vector{X: 0, Y: 0}, collision2d.Vector{X: 10, Y: 0}, collision2d.Vector{X: 10, Y: 10}, collision2d.Vector{X: 0, Y: 10}}, CalcPoints: []collision2d.Vector{collision2d.Vector{X: 0, Y: 0}, collision2d.Vector{X: 10, Y: 0}, collision2d.Vector{X: 10, Y: 10}, collision2d.Vector{X: 0, Y: 10}}, Edges: []collision2d.Vector{collision2d.Vector{X: 10, Y: 0}, collision2d.Vector{X: 0, Y: 10}, collision2d.Vector{X: -10, Y: 0}, collision2d.Vector{X: 0, Y: -10}}, Normals: []collision2d.Vector{collision2d.Vector{X: 0, Y: -1}, collision2d.Vector{X: 1, Y: -0}, collision2d.Vector{X: 0, Y: 1}, collision2d.Vector{X: -1, Y: -0}}}, polygonAABB, "they should be equal")
 }

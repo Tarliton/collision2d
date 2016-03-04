@@ -3,6 +3,7 @@ package collision2d_test
 import (
 	"github.com/Tarliton/collision2d"
 	"github.com/stretchr/testify/assert"
+	"math"
 	"testing"
 )
 
@@ -43,6 +44,16 @@ func TestTestCircleCircle(t *testing.T) {
 	assert.Equal(t, true, response.OverlapV.X == float64(10) && response.OverlapV.Y == float64(0), "they should be equal")
 }
 
+func TestTestNotCircleCircle(t *testing.T) {
+	circle1 := collision2d.Circle{collision2d.Vector{0, 0}, 20}
+	circle2 := collision2d.Circle{collision2d.Vector{30, 50}, 20}
+	result, response := collision2d.TestCircleCircle(circle1, circle2)
+	assert.Equal(t, false, result, "they should be equal")
+	assert.Equal(t, -math.MaxFloat64, response.Overlap, "they should be equal")
+	assert.Equal(t, float64(0), response.OverlapV.X, "they should be equal")
+	assert.Equal(t, float64(0), response.OverlapV.Y, "they should be equal")
+}
+
 func TestTestPolygonCircle(t *testing.T) {
 	polygon := collision2d.Polygon{collision2d.Vector{0, 0}, collision2d.Vector{}, 0, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}}.SetPoints([]collision2d.Vector{collision2d.Vector{}, collision2d.Vector{40, 0}, collision2d.Vector{40, 40}, collision2d.Vector{0, 40}})
 	circle := collision2d.Circle{collision2d.Vector{50, 50}, 20}
@@ -51,6 +62,16 @@ func TestTestPolygonCircle(t *testing.T) {
 	assert.Equal(t, float64(5.857864376269049), response.Overlap, "they should be equal")
 	assert.Equal(t, float64(4.14213562373095), response.OverlapV.X, "they should be equal")
 	assert.Equal(t, float64(4.14213562373095), response.OverlapV.Y, "they should be equal")
+}
+
+func TestTestNotPolygonCircle(t *testing.T) {
+	polygon := collision2d.Polygon{collision2d.Vector{0, 0}, collision2d.Vector{}, 0, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}}.SetPoints([]collision2d.Vector{collision2d.Vector{}, collision2d.Vector{40, 0}, collision2d.Vector{40, 40}, collision2d.Vector{0, 40}})
+	circle := collision2d.Circle{collision2d.Vector{200, 200}, 1}
+	result, response := collision2d.TestPolygonCircle(polygon, circle)
+	assert.Equal(t, false, result, "they should be equal")
+	assert.Equal(t, -math.MaxFloat64, response.Overlap, "they should be equal")
+	assert.Equal(t, float64(0), response.OverlapV.X, "they should be equal")
+	assert.Equal(t, float64(0), response.OverlapV.Y, "they should be equal")
 }
 
 func TestTestCirclePolygon(t *testing.T) {
