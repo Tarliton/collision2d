@@ -15,6 +15,18 @@ func (polygon Polygon) String() string {
 	return fmt.Sprintf("{Pos:%sOffset:%sAngle: %f\nPoints: %s}", polygon.Pos, polygon.Offset, polygon.Angle, polygon.Points)
 }
 
+//NewPolygon creates a new polygon with pos, offset, angle and points.
+//Points is an array of pairs of float64 values, that are mapped into Vectors with X and Y.
+//The first value is X and the second is Y. See test to understand better.
+func NewPolygon(pos, offset Vector, angle float64, points []float64) Polygon {
+	var vectorPoints []Vector
+	for i := 0; i < len(points); i += 2 {
+		vectorPoints = append(vectorPoints, NewVector(points[i], points[i+1]))
+	}
+	polygon := Polygon{Pos: pos, Offset: offset, Angle: angle}
+	return polygon.SetPoints(vectorPoints)
+}
+
 //SetPoints change the edges of the polygon and recauculate the rest of it's values.
 func (polygon Polygon) SetPoints(points []Vector) Polygon {
 	calcPoints := polygon.CalcPoints
