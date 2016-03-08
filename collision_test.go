@@ -9,14 +9,14 @@ import (
 
 func TestPointInCircle(t *testing.T) {
 	point := collision2d.Vector{11, 11}
-	circle := collision2d.Circle{collision2d.Vector{10, 10}, 5}
+	circle := collision2d.NewCircle(collision2d.NewVector(10, 10), 5)
 	result := collision2d.PointInCircle(point, circle)
 	assert.Equal(t, true, result, "they should be equal")
 }
 
 func TestPointNotInCircle(t *testing.T) {
 	point := collision2d.Vector{155, 11}
-	circle := collision2d.Circle{collision2d.Vector{10, 10}, 5}
+	circle := collision2d.NewCircle(collision2d.NewVector(10, 10), 5)
 	result := collision2d.PointInCircle(point, circle)
 	assert.Equal(t, false, result, "they should be equal")
 }
@@ -36,8 +36,8 @@ func TestPointNotInPolygon(t *testing.T) {
 }
 
 func TestTestCircleCircle(t *testing.T) {
-	circle1 := collision2d.Circle{collision2d.Vector{0, 0}, 20}
-	circle2 := collision2d.Circle{collision2d.Vector{30, 0}, 20}
+	circle1 := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
+	circle2 := collision2d.NewCircle(collision2d.NewVector(30, 0), 20)
 	result, response := collision2d.TestCircleCircle(circle1, circle2)
 	assert.Equal(t, true, result, "they should be equal")
 	assert.Equal(t, float64(10), response.Overlap, "they should be equal")
@@ -45,8 +45,8 @@ func TestTestCircleCircle(t *testing.T) {
 }
 
 func TestTestNotCircleCircle(t *testing.T) {
-	circle1 := collision2d.Circle{collision2d.Vector{0, 0}, 20}
-	circle2 := collision2d.Circle{collision2d.Vector{30, 50}, 20}
+	circle1 := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
+	circle2 := collision2d.NewCircle(collision2d.NewVector(30, 50), 20)
 	result, response := collision2d.TestCircleCircle(circle1, circle2)
 	assert.Equal(t, false, result, "they should be equal")
 	assert.Equal(t, -math.MaxFloat64, response.Overlap, "they should be equal")
@@ -56,7 +56,7 @@ func TestTestNotCircleCircle(t *testing.T) {
 
 func TestTestPolygonCircle(t *testing.T) {
 	polygon := collision2d.Polygon{collision2d.Vector{0, 0}, collision2d.Vector{}, 0, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}}.SetPoints([]collision2d.Vector{collision2d.Vector{}, collision2d.Vector{40, 0}, collision2d.Vector{40, 40}, collision2d.Vector{0, 40}})
-	circle := collision2d.Circle{collision2d.Vector{50, 50}, 20}
+	circle := collision2d.NewCircle(collision2d.NewVector(50, 50), 20)
 	result, response := collision2d.TestPolygonCircle(polygon, circle)
 	assert.Equal(t, true, result, "they should be equal")
 	assert.Equal(t, float64(5.857864376269049), response.Overlap, "they should be equal")
@@ -66,7 +66,7 @@ func TestTestPolygonCircle(t *testing.T) {
 
 func TestTestNotPolygonCircle(t *testing.T) {
 	polygon := collision2d.Polygon{collision2d.Vector{0, 0}, collision2d.Vector{}, 0, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}}.SetPoints([]collision2d.Vector{collision2d.Vector{}, collision2d.Vector{40, 0}, collision2d.Vector{40, 40}, collision2d.Vector{0, 40}})
-	circle := collision2d.Circle{collision2d.Vector{200, 200}, 1}
+	circle := collision2d.NewCircle(collision2d.NewVector(200, 200), 1)
 	result, response := collision2d.TestPolygonCircle(polygon, circle)
 	assert.Equal(t, false, result, "they should be equal")
 	assert.Equal(t, -math.MaxFloat64, response.Overlap, "they should be equal")
@@ -76,7 +76,7 @@ func TestTestNotPolygonCircle(t *testing.T) {
 
 func TestTestCirclePolygon(t *testing.T) {
 	polygon := collision2d.Polygon{collision2d.Vector{0, 0}, collision2d.Vector{}, 0, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}, []collision2d.Vector{}}.SetPoints([]collision2d.Vector{collision2d.Vector{}, collision2d.Vector{40, 0}, collision2d.Vector{40, 40}, collision2d.Vector{0, 40}})
-	circle := collision2d.Circle{collision2d.Vector{50, 50}, 20}
+	circle := collision2d.NewCircle(collision2d.NewVector(50, 50), 20)
 	result, response := collision2d.TestCirclePolygon(circle, polygon)
 	assert.Equal(t, true, result, "they should be equal")
 	assert.Equal(t, float64(5.857864376269049), response.Overlap, "they should be equal")
