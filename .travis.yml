@@ -1,11 +1,16 @@
 language: go
-
 go:
-  - 1.4.3
-  - 1.5.3
-  - 1.6
-  - release
-  - tip
-
+- 1.4.3
+- 1.5.3
+- 1.6
+- release
+- tip
+before_install:
+  - go get github.com/axw/gocov/gocov
+  - go get github.com/mattn/goveralls
+  - if ! go get github.com/golang/tools/cmd/cover; then go get golang.org/x/tools/cmd/cover; fi
 script:
-  - go test -v ./...
+  - $HOME/gopath/bin/goveralls -v
+env:
+  global:
+    secure: Xh0obOkXBbo6N9CrlG+qPbewyK2DxFY4mpgEOFef3uZT3OeM8cKrJvOh6KAIOPwe64La1/dNJlydjUale6WPK6rXHfQ6mVtv6kQ7SzOfXZyNfYg3KNvlOaQOcWonprnEBQsVm5SIJtbPNwKGcaq11pZPYEZUunjEzVCn/zlsBnTLm68ywfjxDd3XqS7m8dZMlU6rkh9Qe3yTytLZw0pYKUkUa4KB/jJ4LAZLboNqlSFhswNp5tCshq4w2AQ1FDjRRiUWZ5KaEQovwrHjdysJtU6c/xi84ta918wB27oWawUKM0uQXkVkQjNRJ6rQP6+6EDhHEFRMSpzgBj3mNsGRcqOkSv+qY7TOsRTpytZAXxFg86a0OBr02IHHrjjV/3dxOc6lT01uhvk5mzURslPZaO8TymKFeoF0CRB5ewjFpWrL6H4aouYBqic/XY5A0T/Mwld1AVUXoIa9IhggM9OhMP8120gubmIYfMa3egyRzc9uh6QT4d3iVIaA4K0xQ1XSNtVsVCscK+aXU4l8rFC7Q2qUp3UVhhagtUIhZKqnqX1/3xkgbBwF5JGpjKx/Uv2G2rN+iVYb1KSEbWEa8lTAgi0hHVxTzBzUjABgIZXoPvjaCOarLzMD+6KoooRw9fTqJL+EQoBwArNCxsuf9rPHxw8bsu2fT/O6u49SCzK3mWk=
