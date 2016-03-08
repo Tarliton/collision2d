@@ -85,12 +85,11 @@ func TestPolygonCircle(polygon Polygon, circle Circle) (isColliding bool, respon
 				dist := point.Len()
 				if dist > radius {
 					return false, response.NotColliding()
-				} else {
-					response.BInA = false
-					overlapN = overlapN.Copy(point.Normalize())
-					changedOverlapN = true
-					overlap = radius - dist
 				}
+				response.BInA = false
+				overlapN = overlapN.Copy(point.Normalize())
+				changedOverlapN = true
+				overlap = radius - dist
 			}
 		} else if region == rightVoronoiRegion {
 			edge = edge.Copy(polygon.Edges[next])
@@ -101,12 +100,11 @@ func TestPolygonCircle(polygon Polygon, circle Circle) (isColliding bool, respon
 				dist := point.Len()
 				if dist > radius {
 					return false, response.NotColliding()
-				} else {
-					response.BInA = false
-					overlapN = overlapN.Copy(point.Normalize())
-					changedOverlapN = true
-					overlap = radius - dist
 				}
+				response.BInA = false
+				overlapN = overlapN.Copy(point.Normalize())
+				changedOverlapN = true
+				overlap = radius - dist
 			}
 		} else {
 			normal := edge.Perp().Normalize()
@@ -114,13 +112,12 @@ func TestPolygonCircle(polygon Polygon, circle Circle) (isColliding bool, respon
 			distAbs := math.Abs(dist)
 			if dist > 0 && distAbs > radius {
 				return false, response.NotColliding()
-			} else {
-				overlapN = overlapN.Copy(normal)
-				changedOverlapN = true
-				overlap = radius - dist
-				if dist >= 0 || overlap < 2*radius {
-					response.BInA = false
-				}
+			}
+			overlapN = overlapN.Copy(normal)
+			changedOverlapN = true
+			overlap = radius - dist
+			if dist >= 0 || overlap < 2*radius {
+				response.BInA = false
 			}
 		}
 		if changedOverlapN && math.Abs(overlap) < math.Abs(response.Overlap) {
