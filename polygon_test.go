@@ -94,10 +94,10 @@ func TestGetAABBPolygonOne(t *testing.T) {
 
 func TestGetAABBPolygonTwo(t *testing.T) {
 	polygonCorners := []float64{
-		0, 0,
-		10, 0,
 		10, 10,
 		0, 10,
+		0, 0,
+		10, 0,
 	}
 	polygon := collision2d.NewPolygon(collision2d.NewVector(5, 5), collision2d.NewVector(0, 0), 0, polygonCorners)
 	polygonAABB := polygon.GetAABB()
