@@ -126,3 +126,83 @@ func TestTestPolygonPolygon(t *testing.T) {
 	assert.Equal(t, float64(0), response.OverlapV.X, "they should be equal")
 	assert.Equal(t, float64(0), response.OverlapV.Y, "they should be equal")
 }
+
+var response collision2d.Response
+
+func BenchmarkPointInCircle(b *testing.B) {
+	circle := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
+	point := collision2d.NewVector(1, 2)
+	for i := 0; i < b.N; i++ {
+		collision2d.PointInCircle(point, circle)
+	}
+}
+
+func BenchmarkPointInPolygon(b *testing.B) {
+	polygonCorners := []float64{
+		0, 0,
+		40, 0,
+		40, 40,
+		0, 40,
+	}
+	polygon := collision2d.NewPolygon(collision2d.NewVector(0, 0), collision2d.NewVector(0, 0), 0, polygonCorners)
+	point := collision2d.NewVector(1, 2)
+	for i := 0; i < b.N; i++ {
+		collision2d.PointInPolygon(point, polygon)
+	}
+}
+
+func BenchmarkTestCircleCircle(b *testing.B) {
+	circle1 := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
+	circle2 := collision2d.NewCircle(collision2d.NewVector(30, 0), 20)
+	for i := 0; i < b.N; i++ {
+		_, response = collision2d.TestCircleCircle(circle1, circle2)
+	}
+}
+
+func BenchmarkTestPolygonCircle(b *testing.B) {
+	circle := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
+	polygonCorners := []float64{
+		0, 0,
+		40, 0,
+		40, 40,
+		0, 40,
+	}
+	polygon := collision2d.NewPolygon(collision2d.NewVector(0, 0), collision2d.NewVector(0, 0), 0, polygonCorners)
+	for i := 0; i < b.N; i++ {
+		_, response = collision2d.TestPolygonCircle(polygon, circle)
+	}
+}
+
+func BenchmarkTestCirclePolygon(b *testing.B) {
+	circle := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
+	polygonCorners := []float64{
+		0, 0,
+		40, 0,
+		40, 40,
+		0, 40,
+	}
+	polygon := collision2d.NewPolygon(collision2d.NewVector(0, 0), collision2d.NewVector(0, 0), 0, polygonCorners)
+	for i := 0; i < b.N; i++ {
+		_, response = collision2d.TestCirclePolygon(circle, polygon)
+	}
+}
+
+func BenchmarkTestPolygonPolygon(b *testing.B) {
+	polygonCorners1 := []float64{
+		0, 0,
+		40, 0,
+		40, 40,
+		0, 40,
+	}
+	polygon1 := collision2d.NewPolygon(collision2d.NewVector(0, 0), collision2d.NewVector(0, 0), 0, polygonCorners1)
+	polygonCorners2 := []float64{
+		0, 0,
+		40, 0,
+		40, 40,
+		0, 40,
+	}
+	polygon2 := collision2d.NewPolygon(collision2d.NewVector(15, 25), collision2d.NewVector(0, 0), 0, polygonCorners2)
+	for i := 0; i < b.N; i++ {
+		_, response = collision2d.TestPolygonPolygon(polygon1, polygon2)
+	}
+}
