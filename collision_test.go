@@ -124,7 +124,7 @@ func TestCollisionTestPolygonPolygon(t *testing.T) {
 	assert.Equal(t, true, result, "they should be equal")
 	assert.Equal(t, float64(40), response.Overlap, "they should be equal")
 	assert.Equal(t, float64(0), response.OverlapV.X, "they should be equal")
-	assert.Equal(t, float64(0), response.OverlapV.Y, "they should be equal")
+	assert.Equal(t, float64(40), response.OverlapV.Y, "they should be equal")
 }
 
 var response collision2d.Response

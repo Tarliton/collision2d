@@ -171,7 +171,7 @@ func TestPolygonPolygon(a, b Polygon) (isColliding bool, response Response) {
 
 	response.A = a
 	response.B = b
-	response.OverlapV.Copy(response.OverlapN).Scale(response.Overlap)
+	response.OverlapV = response.OverlapV.Copy(response.OverlapN).Scale(response.Overlap)
 
 	return true, response
 }
@@ -191,23 +191,23 @@ func voronoiRegion(line, point Vector) int {
 func isSeparatingAxis(aPos, bPos Vector, aPoints, bPoints []Vector, axis Vector, response *Response) bool {
 	offsetV := Vector{}.Copy(bPos).Sub(aPos)
 	projectedOffset := offsetV.Dot(axis)
-	rangeA := flattenPointsOn(aPoints, axis)
-	rangeB := flattenPointsOn(bPoints, axis)
-	rangeB[0] += projectedOffset
-	rangeB[1] += projectedOffset
-	if rangeA[0] > rangeB[1] || rangeB[0] > rangeA[1] {
+	minA, maxA := flattenPointsOn(aPoints, axis)
+	minB, maxB := flattenPointsOn(bPoints, axis)
+	minB += projectedOffset
+	maxB += projectedOffset
+	if minA > maxB || minB > maxA {
 		return true
 	}
 
 	overlap := 0.0
-	if rangeA[0] < rangeB[0] {
+	if minA < minB {
 		response.AInB = false
-		if rangeA[1] < rangeB[1] {
-			overlap = rangeA[1] - rangeB[0]
+		if maxA < maxB {
+			overlap = maxA - minB
 			response.BInA = false
 		} else {
-			option1 := rangeA[1] - rangeB[0]
-			option2 := rangeB[1] - rangeA[0]
+			option1 := maxA - minB
+			option2 := maxB - minA
 			if option1 < option2 {
 				overlap = option1
 			} else {
@@ -216,12 +216,12 @@ func isSeparatingAxis(aPos, bPos Vector, aPoints, bPoints []Vector, axis Vector,
 		}
 	} else {
 		response.BInA = false
-		if rangeA[1] > rangeB[1] {
-			overlap = rangeA[0] - rangeB[1]
+		if maxA > maxB {
+			overlap = minA - maxB
 			response.AInB = false
 		} else {
-			option1 := rangeA[1] - rangeB[0]
-			option2 := rangeB[1] - rangeA[0]
+			option1 := maxA - minB
+			option2 := maxB - minA
 			if option1 < option2 {
 				overlap = option1
 			} else {
@@ -233,22 +233,20 @@ func isSeparatingAxis(aPos, bPos Vector, aPoints, bPoints []Vector, axis Vector,
 	absOverlap := math.Abs(overlap)
 	if absOverlap < response.Overlap {
 		response.Overlap = absOverlap
-		response.OverlapN.Copy(axis)
+		response.OverlapN = response.OverlapN.Copy(axis)
 		if overlap < 0 {
-			response.OverlapN.Reverse()
+			response.OverlapN = response.OverlapN.Reverse()
 		}
 	}
 	return false
 }
 
-func flattenPointsOn(points []Vector, normal Vector) []float64 {
-	result := []float64{0, 0}
-	min := math.MaxFloat64
-	max := -math.MaxFloat64
+func flattenPointsOn(points []Vector, normal Vector) (min, max float64) {
+	min = math.MaxFloat64
+	max = -math.MaxFloat64
 	length := len(points)
 	for i := 0; i < length; i++ {
 		dot := points[i].Dot(normal)
-
 		if dot < min {
 			min = dot
 		}
@@ -256,7 +254,5 @@ func flattenPointsOn(points []Vector, normal Vector) []float64 {
 			max = dot
 		}
 	}
-	result[0] = min
-	result[1] = max
-	return result
+	return min, max
 }
