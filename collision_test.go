@@ -7,21 +7,21 @@ import (
 	"testing"
 )
 
-func TestPointInCircle(t *testing.T) {
+func TestCollisionPointInCircle(t *testing.T) {
 	point := collision2d.NewVector(11, 11)
 	circle := collision2d.NewCircle(collision2d.NewVector(10, 10), 5)
 	result := collision2d.PointInCircle(point, circle)
 	assert.Equal(t, true, result, "they should be equal")
 }
 
-func TestPointNotInCircle(t *testing.T) {
+func TestCollisionPointNotInCircle(t *testing.T) {
 	point := collision2d.NewVector(155, 11)
 	circle := collision2d.NewCircle(collision2d.NewVector(10, 10), 5)
 	result := collision2d.PointInCircle(point, circle)
 	assert.Equal(t, false, result, "they should be equal")
 }
 
-func TestPointInPolygon(t *testing.T) {
+func TestCollisionPointInPolygon(t *testing.T) {
 	point := collision2d.NewVector(35, 5)
 	polygonCorners := []float64{
 		0, 0,
@@ -33,7 +33,7 @@ func TestPointInPolygon(t *testing.T) {
 	assert.Equal(t, true, result, "they should be equal")
 }
 
-func TestPointNotInPolygon(t *testing.T) {
+func TestCollisionPointNotInPolygon(t *testing.T) {
 	point := collision2d.NewVector(0, 0)
 	polygonCorners := []float64{
 		0, 0,
@@ -45,7 +45,7 @@ func TestPointNotInPolygon(t *testing.T) {
 	assert.Equal(t, false, result, "they should be equal")
 }
 
-func TestTestCircleCircle(t *testing.T) {
+func TestCollisionTestCircleCircle(t *testing.T) {
 	circle1 := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
 	circle2 := collision2d.NewCircle(collision2d.NewVector(30, 0), 20)
 	result, response := collision2d.TestCircleCircle(circle1, circle2)
@@ -54,7 +54,7 @@ func TestTestCircleCircle(t *testing.T) {
 	assert.Equal(t, true, response.OverlapV.X == float64(10) && response.OverlapV.Y == float64(0), "they should be equal")
 }
 
-func TestTestNotCircleCircle(t *testing.T) {
+func TestCollisionTestNotCircleCircle(t *testing.T) {
 	circle1 := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
 	circle2 := collision2d.NewCircle(collision2d.NewVector(30, 50), 20)
 	result, response := collision2d.TestCircleCircle(circle1, circle2)
@@ -64,7 +64,7 @@ func TestTestNotCircleCircle(t *testing.T) {
 	assert.Equal(t, float64(0), response.OverlapV.Y, "they should be equal")
 }
 
-func TestTestPolygonCircle(t *testing.T) {
+func TestCollisionTestPolygonCircle(t *testing.T) {
 	polygonCorners := []float64{
 		0, 0,
 		40, 0,
@@ -80,7 +80,7 @@ func TestTestPolygonCircle(t *testing.T) {
 	assert.Equal(t, float64(4.14213562373095), response.OverlapV.Y, "they should be equal")
 }
 
-func TestTestNotPolygonCircle(t *testing.T) {
+func TestCollisionTestNotPolygonCircle(t *testing.T) {
 	polygonCorners := []float64{
 		0, 0,
 		40, 0,
@@ -96,7 +96,7 @@ func TestTestNotPolygonCircle(t *testing.T) {
 	assert.Equal(t, float64(0), response.OverlapV.Y, "they should be equal")
 }
 
-func TestTestCirclePolygon(t *testing.T) {
+func TestCollisionTestCirclePolygon(t *testing.T) {
 	polygonCorners := []float64{
 		0, 0,
 		40, 0,
@@ -112,7 +112,7 @@ func TestTestCirclePolygon(t *testing.T) {
 	assert.Equal(t, float64(-4.14213562373095), response.OverlapV.Y, "they should be equal")
 }
 
-func TestTestPolygonPolygon(t *testing.T) {
+func TestCollisionTestPolygonPolygon(t *testing.T) {
 	polygonCorners := []float64{
 		0, 0,
 		40, 0,
@@ -129,7 +129,7 @@ func TestTestPolygonPolygon(t *testing.T) {
 
 var response collision2d.Response
 
-func BenchmarkPointInCircle(b *testing.B) {
+func BenchmarkCollisionPointInCircle(b *testing.B) {
 	circle := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
 	point := collision2d.NewVector(1, 2)
 	for i := 0; i < b.N; i++ {
@@ -137,7 +137,7 @@ func BenchmarkPointInCircle(b *testing.B) {
 	}
 }
 
-func BenchmarkPointInPolygon(b *testing.B) {
+func BenchmarkCollisionPointInPolygon(b *testing.B) {
 	polygonCorners := []float64{
 		0, 0,
 		40, 0,
@@ -151,7 +151,7 @@ func BenchmarkPointInPolygon(b *testing.B) {
 	}
 }
 
-func BenchmarkTestCircleCircle(b *testing.B) {
+func BenchmarkCollisionTestCircleCircle(b *testing.B) {
 	circle1 := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
 	circle2 := collision2d.NewCircle(collision2d.NewVector(30, 0), 20)
 	for i := 0; i < b.N; i++ {
@@ -159,7 +159,7 @@ func BenchmarkTestCircleCircle(b *testing.B) {
 	}
 }
 
-func BenchmarkTestPolygonCircle(b *testing.B) {
+func BenchmarkCollisionTestPolygonCircle(b *testing.B) {
 	circle := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
 	polygonCorners := []float64{
 		0, 0,
@@ -173,7 +173,7 @@ func BenchmarkTestPolygonCircle(b *testing.B) {
 	}
 }
 
-func BenchmarkTestCirclePolygon(b *testing.B) {
+func BenchmarkCollisionTestCirclePolygon(b *testing.B) {
 	circle := collision2d.NewCircle(collision2d.NewVector(0, 0), 20)
 	polygonCorners := []float64{
 		0, 0,
@@ -187,7 +187,7 @@ func BenchmarkTestCirclePolygon(b *testing.B) {
 	}
 }
 
-func BenchmarkTestPolygonPolygon(b *testing.B) {
+func BenchmarkCollisionTestPolygonPolygon(b *testing.B) {
 	polygonCorners1 := []float64{
 		0, 0,
 		40, 0,

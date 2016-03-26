@@ -14,13 +14,13 @@ func TestVectorString(t *testing.T) {
 	assert.Equal(t, "{X:0.000000, Y:0.000000}\n", output, "they should be equal")
 }
 
-func TestCreateVectorXZeros(t *testing.T) {
+func TestVectorNewVectorZeros(t *testing.T) {
 	vector := collision2d.NewVector(0, 0)
 	assert.Equal(t, float64(0), vector.X, "they should be equal")
 	assert.Equal(t, float64(0), vector.Y, "they should be equal")
 }
 
-func TestCreateVectorXNumber(t *testing.T) {
+func TestVectorNewVectorNumbers(t *testing.T) {
 	vector := collision2d.NewVector(3.46, 2.18)
 	assert.Equal(t, float64(3.46), vector.X, "they should be equal")
 	assert.Equal(t, float64(2.18), vector.Y, "they should be equal")

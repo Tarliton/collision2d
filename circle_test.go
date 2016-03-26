@@ -12,7 +12,7 @@ func TestCircleString(t *testing.T) {
 	assert.Equal(t, "{Pos:{X:10.000000, Y:10.000000}\nRadius: 5.000000}", output, "they should be equal")
 }
 
-func TestGetAABBCircle(t *testing.T) {
+func TestCircleGetAABB(t *testing.T) {
 	circle := collision2d.NewCircle(collision2d.NewVector(10, 10), 5)
 	polygonCorners := []float64{
 		0, 0,
@@ -24,7 +24,7 @@ func TestGetAABBCircle(t *testing.T) {
 	assert.Equal(t, polygon, circle.GetAABB(), "they should be equal")
 }
 
-func TestNewCircle(t *testing.T) {
+func TestCircleNewCircle(t *testing.T) {
 	circle := collision2d.NewCircle(collision2d.NewVector(5, 8), 20)
 	assert.Equal(t, float64(5), circle.Pos.X, "they should be equal")
 	assert.Equal(t, float64(8), circle.Pos.Y, "they should be equal")

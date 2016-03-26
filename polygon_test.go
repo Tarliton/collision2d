@@ -19,7 +19,7 @@ func TestPolygonString(t *testing.T) {
 	assert.Equal(t, "{Pos:{X:5.000000, Y:5.000000}\nOffset:{X:0.000000, Y:0.000000}\nAngle: 0.000000\nPoints: [{X:0.000000, Y:0.000000}\n {X:10.000000, Y:0.000000}\n {X:10.000000, Y:10.000000}\n {X:0.000000, Y:10.000000}\n]}", output, "they should be equal")
 }
 
-func TestNewPolygon(t *testing.T) {
+func TestPolygonNewPolygon(t *testing.T) {
 	polygonCorners := []float64{
 		0, 0,
 		10, 0,
@@ -32,7 +32,7 @@ func TestNewPolygon(t *testing.T) {
 	assert.Equal(t, float64(0), polygon.Angle, "they should be equal")
 }
 
-func TestSetAngle(t *testing.T) {
+func TestPolygonSetAngle(t *testing.T) {
 	polygonCorners := []float64{
 		0, 0,
 		10, 0,
@@ -44,7 +44,7 @@ func TestSetAngle(t *testing.T) {
 	assert.Equal(t, math.Pi/2, polygon.Angle, "they should be equal")
 }
 
-func TestSetOffset(t *testing.T) {
+func TestPolygonSetOffset(t *testing.T) {
 	polygonCorners := []float64{
 		0, 0,
 		10, 0,
@@ -56,7 +56,7 @@ func TestSetOffset(t *testing.T) {
 	assert.Equal(t, collision2d.NewVector(50, 50), polygon.Offset, "they should be equal")
 }
 
-func TestRotate(t *testing.T) {
+func TestPolygonRotate(t *testing.T) {
 	polygonCorners := []float64{
 		0, 0,
 		10, 0,
@@ -68,7 +68,7 @@ func TestRotate(t *testing.T) {
 	assert.Equal(t, []collision2d.Vector{collision2d.Vector{X: -0, Y: 0}, collision2d.Vector{X: -10, Y: 1.2246467991473515e-15}, collision2d.Vector{X: -10.000000000000002, Y: -9.999999999999998}, collision2d.Vector{X: -1.2246467991473515e-15, Y: -10}}, polygon.Points, "they should be equal")
 }
 
-func TestTranslate(t *testing.T) {
+func TestPolygonTranslate(t *testing.T) {
 	polygonCorners := []float64{
 		0, 0,
 		10, 0,
@@ -80,7 +80,7 @@ func TestTranslate(t *testing.T) {
 	assert.Equal(t, []collision2d.Vector{collision2d.Vector{X: 5.5, Y: 9.2}, collision2d.Vector{X: 15.5, Y: 9.2}, collision2d.Vector{X: 15.5, Y: 19.2}, collision2d.Vector{X: 5.5, Y: 19.2}}, polygon.Points, "they should be equal")
 }
 
-func TestGetAABBPolygonOne(t *testing.T) {
+func TestPolygonGetAABBOne(t *testing.T) {
 	polygonCorners := []float64{
 		0, 0,
 		10, 0,
@@ -92,7 +92,7 @@ func TestGetAABBPolygonOne(t *testing.T) {
 	assert.Equal(t, polygon, polygonAABB, "they should be equal")
 }
 
-func TestGetAABBPolygonTwo(t *testing.T) {
+func TestPolygonGetAABBTwo(t *testing.T) {
 	polygonCorners := []float64{
 		10, 10,
 		0, 10,
