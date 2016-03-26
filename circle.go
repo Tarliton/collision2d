@@ -24,6 +24,6 @@ func (circle Circle) GetAABB() Polygon {
 	r := circle.R
 	vector := NewVector(r, r)
 	corner := circle.Pos.Sub(vector)
-	polygon := Box{corner, r * 2, r * 2}.ToPolygon()
+	polygon := NewBox(corner, r*2, r*2).ToPolygon()
 	return polygon
 }

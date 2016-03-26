@@ -14,7 +14,7 @@ func PointInCircle(p Vector, c Circle) bool {
 
 //PointInPolygon returns true if the point is inside a polygon.
 func PointInPolygon(p Vector, poly Polygon) bool {
-	polygon := Box{Vector{}, 1, 1}.ToPolygon()
+	polygon := NewBox(NewVector(0, 0), 1, 1).ToPolygon()
 	polygon.Pos = polygon.Pos.Copy(p)
 	isInside, _ := TestPolygonPolygon(polygon, poly)
 	return isInside

@@ -101,7 +101,7 @@ func (polygon Polygon) GetAABB() Polygon {
 			yMax = point.Y
 		}
 	}
-	box := Box{polygon.Pos.Clone().Add(Vector{xMin, yMin}), xMax - xMin, yMax - yMin}
+	box := NewBox(polygon.Pos.Clone().Add(NewVector(xMin, yMin)), xMax-xMin, yMax-yMin)
 	return box.ToPolygon()
 }
 
