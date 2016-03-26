@@ -4,6 +4,7 @@ Collision2D
 [![Build Status](https://travis-ci.org/Tarliton/collision2d.svg?branch=master)](https://travis-ci.org/Tarliton/collision2d)
 [![GoDoc](https://godoc.org/github.com/Tarliton/collision2d?status.svg)](https://godoc.org/github.com/Tarliton/collision2d)
 [![Coverage Status](https://coveralls.io/repos/github/Tarliton/collision2d/badge.svg?branch=master)](https://coveralls.io/github/Tarliton/collision2d?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Tarliton/collision2d)](https://goreportcard.com/report/github.com/Tarliton/collision2d)
 
 About
 -----
