@@ -19,9 +19,9 @@ func (polygon Polygon) String() string {
 //Points is an array of pairs of float64 values, that are mapped into Vectors with X and Y.
 //The first value is X and the second is Y. See test to understand better.
 func NewPolygon(pos, offset Vector, angle float64, points []float64) Polygon {
-	var vectorPoints []Vector
+	var vectorPoints = make([]Vector, len(points)/2)
 	for i := 0; i < len(points); i += 2 {
-		vectorPoints = append(vectorPoints, NewVector(points[i], points[i+1]))
+		vectorPoints[i/2] = NewVector(points[i], points[i+1])
 	}
 	polygon := Polygon{Pos: pos, Offset: offset, Angle: angle}
 	return polygon.SetPoints(vectorPoints)
