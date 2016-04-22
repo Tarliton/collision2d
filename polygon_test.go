@@ -16,7 +16,7 @@ func TestPolygonString(t *testing.T) {
 	}
 	polygon := collision2d.NewPolygon(collision2d.NewVector(5, 5), collision2d.NewVector(0, 0), 0, polygonCorners[:])
 	output := string(polygon.String())
-	assert.Equal(t, "{Pos:{X:5.000000, Y:5.000000}\nOffset:{X:0.000000, Y:0.000000}\nAngle: 0.000000\nPoints: [{X:0.000000, Y:0.000000}\n {X:10.000000, Y:0.000000}\n {X:10.000000, Y:10.000000}\n {X:0.000000, Y:10.000000}\n]}", output, "they should be equal")
+	assert.Equal(t, "{Pos:{X:5.000000, Y:5.000000}\nOffset:{X:0.000000, Y:0.000000}\nAngle: 0.000000\nPoints: [{X:0.000000, Y:0.000000}\n {X:10.000000, Y:0.000000}\n {X:10.000000, Y:10.000000}\n {X:0.000000, Y:10.000000}\n]\nCalcPoints: [{X:0.000000, Y:0.000000}\n {X:10.000000, Y:0.000000}\n {X:10.000000, Y:10.000000}\n {X:0.000000, Y:10.000000}\n]}", output, "they should be equal")
 }
 
 func TestPolygonNewPolygon(t *testing.T) {
@@ -26,10 +26,10 @@ func TestPolygonNewPolygon(t *testing.T) {
 		10, 10,
 		0, 10,
 	}
-	polygon := collision2d.NewPolygon(collision2d.NewVector(5, 4), collision2d.NewVector(0, 0), 0, polygonCorners[:])
+	polygon := collision2d.NewPolygon(collision2d.NewVector(5, 4), collision2d.NewVector(5, 5), math.Pi/2, polygonCorners[:])
 	assert.Equal(t, float64(5), polygon.Pos.X, "they should be equal")
 	assert.Equal(t, float64(4), polygon.Pos.Y, "they should be equal")
-	assert.Equal(t, float64(0), polygon.Angle, "they should be equal")
+	assert.Equal(t, float64(math.Pi/2), polygon.Angle, "they should be equal")
 }
 
 func TestPolygonSetAngle(t *testing.T) {

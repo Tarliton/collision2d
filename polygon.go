@@ -12,7 +12,7 @@ type Polygon struct {
 }
 
 func (polygon Polygon) String() string {
-	return fmt.Sprintf("{Pos:%sOffset:%sAngle: %f\nPoints: %s}", polygon.Pos, polygon.Offset, polygon.Angle, polygon.Points)
+	return fmt.Sprintf("{Pos:%sOffset:%sAngle: %f\nPoints: %s\nCalcPoints: %s}", polygon.Pos, polygon.Offset, polygon.Angle, polygon.Points, polygon.CalcPoints)
 }
 
 //NewPolygon creates a new polygon with pos, offset, angle and points.
@@ -118,7 +118,7 @@ func (polygon *Polygon) recalc() {
 		calcPoint.X += offset.X
 		calcPoint.Y += offset.Y
 		if angle != 0 {
-			calcPoint.Rotate(angle)
+			calcPoint = calcPoint.Rotate(angle)
 		}
 		calcPoints[i] = calcPoints[i].Copy(calcPoint)
 	}
