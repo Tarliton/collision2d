@@ -29,18 +29,13 @@ func NewPolygon(pos, offset Vector, angle float64, points []float64) Polygon {
 
 //SetPoints change the edges of the polygon and recauculate the rest of it's values.
 func (polygon Polygon) SetPoints(points []Vector) Polygon {
-	calcPoints := polygon.CalcPoints
-	edges := polygon.Edges
-	normals := polygon.Normals
+	polygon.CalcPoints = make([]Vector, len(points))
+	polygon.Edges = make([]Vector, len(points))
+	polygon.Normals = make([]Vector, len(points))
+	polygon.Points = make([]Vector, len(points))
 	for i := 0; i < len(points); i++ {
-		calcPoints = append(calcPoints, Vector{})
-		edges = append(edges, Vector{})
-		normals = append(normals, Vector{})
+		polygon.Points[i] = polygon.Points[i].Copy(points[i])
 	}
-	polygon.Points = points
-	polygon.CalcPoints = calcPoints
-	polygon.Edges = edges
-	polygon.Normals = normals
 	polygon.recalc()
 	return polygon
 }
@@ -106,37 +101,22 @@ func (polygon Polygon) GetAABB() Polygon {
 }
 
 func (polygon *Polygon) recalc() {
-	calcPoints := polygon.CalcPoints
-	edges := polygon.Edges
-	normals := polygon.Normals
-	points := polygon.Points
-	offset := polygon.Offset
-	angle := polygon.Angle
-	length := len(points)
-	for i := 0; i < length; i++ {
-		calcPoint := calcPoints[i].Copy(points[i])
-		calcPoint.X += offset.X
-		calcPoint.Y += offset.Y
-		if angle != 0 {
-			calcPoint = calcPoint.Rotate(angle)
+	for i := 0; i < len(polygon.Points); i++ {
+		polygon.CalcPoints[i] = polygon.CalcPoints[i].Copy(polygon.Points[i])
+		polygon.CalcPoints[i].X += polygon.Offset.X
+		polygon.CalcPoints[i].Y += polygon.Offset.Y
+		if polygon.Angle != 0 {
+			polygon.CalcPoints[i] = polygon.CalcPoints[i].Rotate(polygon.Angle)
 		}
-		calcPoints[i] = calcPoints[i].Copy(calcPoint)
 	}
-	for i := 0; i < length; i++ {
-		p1 := calcPoints[i]
+	for i := 0; i < len(polygon.Points); i++ {
 		var p2 Vector
-		if i < length-1 {
-			p2 = calcPoints[i+1]
+		if i < len(polygon.Points)-1 {
+			p2 = polygon.CalcPoints[i+1]
 		} else {
-			p2 = calcPoints[0]
+			p2 = polygon.CalcPoints[0]
 		}
-		edges[i] = edges[i].Copy(p2).Sub(p1)
-		normals[i] = normals[i].Copy(edges[i]).Perp().Normalize()
+		polygon.Edges[i] = polygon.Edges[i].Copy(p2).Sub(polygon.CalcPoints[i])
+		polygon.Normals[i] = polygon.Normals[i].Copy(polygon.Edges[i]).Perp().Normalize()
 	}
-	polygon.CalcPoints = calcPoints
-	polygon.Edges = edges
-	polygon.Points = points
-	polygon.Normals = normals
-	polygon.Offset = offset
-	polygon.Angle = angle
 }
