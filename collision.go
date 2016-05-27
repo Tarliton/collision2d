@@ -5,26 +5,25 @@ import (
 )
 
 //PointInCircle returns true if the point is inside the circle.
-func PointInCircle(p Vector, c Circle) bool {
-	differenceV := Vector{}.Copy(p).Sub(c.Pos)
-	radiusSqr := c.R * c.R
+func PointInCircle(point Vector, circle Circle) bool {
+	differenceV := NewVector(point.X, point.Y).Sub(circle.Pos)
+	radiusSqr := circle.R * circle.R
 	distanceSqr := differenceV.Len2()
 	return distanceSqr <= radiusSqr
 }
 
 //PointInPolygon returns true if the point is inside a polygon.
-func PointInPolygon(p Vector, poly Polygon) bool {
-	polygon := NewBox(NewVector(0, 0), 1, 1).ToPolygon()
-	polygon.Pos = polygon.Pos.Copy(p)
-	isInside, _ := TestPolygonPolygon(polygon, poly)
+func PointInPolygon(point Vector, polygon Polygon) bool {
+	pointAsPolygon := NewBox(point.Clone(), 1, 1).ToPolygon()
+	isInside, _ := TestPolygonPolygon(pointAsPolygon, polygon)
 	return isInside
 }
 
 //TestCircleCircle returns true if the circles collide with each other.
-func TestCircleCircle(a, b Circle) (isColliding bool, response Response) {
+func TestCircleCircle(circleA, circleB Circle) (isColliding bool, response Response) {
 	response = NewResponse()
-	differenceV := Vector{}.Copy(b.Pos).Sub(a.Pos)
-	totalRadius := a.R + b.R
+	differenceV := NewVector(circleB.Pos.X, circleB.Pos.Y).Sub(circleA.Pos)
+	totalRadius := circleA.R + circleB.R
 	totalRadiusSqr := totalRadius * totalRadius
 	distanceSqr := differenceV.Len2()
 
@@ -32,13 +31,13 @@ func TestCircleCircle(a, b Circle) (isColliding bool, response Response) {
 		return false, response.NotColliding()
 	}
 	dist := math.Sqrt(distanceSqr)
-	response.A = a
-	response.B = b
+	response.A = circleA
+	response.B = circleB
 	response.Overlap = totalRadius - dist
 	response.OverlapN = response.OverlapN.Copy(differenceV.Normalize())
 	response.OverlapV = response.OverlapV.Copy(differenceV.Normalize()).Scale(response.Overlap)
-	response.AInB = a.R <= b.R && dist <= b.R-a.R
-	response.BInA = b.R <= a.R && dist <= a.R-b.R
+	response.AInB = circleA.R <= circleB.R && dist <= circleB.R-circleA.R
+	response.BInA = circleB.R <= circleA.R && dist <= circleA.R-circleB.R
 
 	return true, response
 }
@@ -46,29 +45,28 @@ func TestCircleCircle(a, b Circle) (isColliding bool, response Response) {
 //TestPolygonCircle returns true if the polygon collides with the circle.
 func TestPolygonCircle(polygon Polygon, circle Circle) (isColliding bool, response Response) {
 	response = NewResponse()
-	circlePos := Vector{}.Copy(circle.Pos).Sub(polygon.Pos)
+	circlePos := NewVector(circle.Pos.X, circle.Pos.Y).Sub(polygon.Pos)
 	radius := circle.R
 	radius2 := radius * radius
 	calcPoints := polygon.CalcPoints
-	length := len(calcPoints)
-	edge := Vector{}
-	point := Vector{}
+	edge := NewVector(0, 0)
+	point := NewVector(0, 0)
 
-	for i := 0; i < length; i++ {
+	for i := 0; i < len(calcPoints); i++ {
 		var next int
 		var prev int
-		if i == length-1 {
+		if i == len(calcPoints)-1 {
 			next = 0
 		} else {
 			next = i + 1
 		}
 		if i == 0 {
-			prev = length - 1
+			prev = len(calcPoints) - 1
 		} else {
 			prev = i - 1
 		}
 		overlap := 0.0
-		overlapN := Vector{}
+		overlapN := NewVector(0, 0)
 		changedOverlapN := false
 		edge = edge.Copy(polygon.Edges[i])
 		point = point.Copy(circlePos).Sub(calcPoints[i])
@@ -79,7 +77,7 @@ func TestPolygonCircle(polygon Polygon, circle Circle) (isColliding bool, respon
 
 		if region == leftVoronoiRegion {
 			edge = edge.Copy(polygon.Edges[prev])
-			point2 := Vector{}.Copy(circlePos).Sub(calcPoints[prev])
+			point2 := NewVector(circlePos.X, circlePos.Y).Sub(calcPoints[prev])
 			region2 := voronoiRegion(edge, point2)
 			if region2 == rightVoronoiRegion {
 				dist := point.Len()
@@ -150,27 +148,23 @@ func TestCirclePolygon(circle Circle, polygon Polygon) (isColliding bool, respon
 }
 
 //TestPolygonPolygon returns true if the polygons collide with each other.
-func TestPolygonPolygon(a, b Polygon) (isColliding bool, response Response) {
+func TestPolygonPolygon(polygonA, polygonB Polygon) (isColliding bool, response Response) {
 	response = NewResponse()
-	aPoints := a.CalcPoints
-	aLen := len(aPoints)
-	bPoints := b.CalcPoints
-	bLen := len(bPoints)
 
-	for i := 0; i < aLen; i++ {
-		if isSeparatingAxis(a.Pos, b.Pos, aPoints, bPoints, a.Normals[i], &response) {
+	for i := 0; i < len(polygonA.CalcPoints); i++ {
+		if isSeparatingAxis(polygonA.Pos, polygonB.Pos, polygonA.CalcPoints, polygonB.CalcPoints, polygonA.Normals[i], &response) {
 			return false, response.NotColliding()
 		}
 	}
 
-	for i := 0; i < bLen; i++ {
-		if isSeparatingAxis(a.Pos, b.Pos, aPoints, bPoints, b.Normals[i], &response) {
+	for i := 0; i < len(polygonB.CalcPoints); i++ {
+		if isSeparatingAxis(polygonA.Pos, polygonB.Pos, polygonA.CalcPoints, polygonB.CalcPoints, polygonB.Normals[i], &response) {
 			return false, response.NotColliding()
 		}
 	}
 
-	response.A = a
-	response.B = b
+	response.A = polygonA
+	response.B = polygonB
 	response.OverlapV = response.OverlapV.Copy(response.OverlapN).Scale(response.Overlap)
 
 	return true, response
@@ -189,7 +183,7 @@ func voronoiRegion(line, point Vector) int {
 }
 
 func isSeparatingAxis(aPos, bPos Vector, aPoints, bPoints []Vector, axis Vector, response *Response) bool {
-	offsetV := Vector{}.Copy(bPos).Sub(aPos)
+	offsetV := NewVector(bPos.X, bPos.Y).Sub(aPos)
 	projectedOffset := offsetV.Dot(axis)
 	minA, maxA := flattenPointsOn(aPoints, axis)
 	minB, maxB := flattenPointsOn(bPoints, axis)
