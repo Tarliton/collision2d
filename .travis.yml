@@ -1,8 +1,7 @@
 language: go
 go:
-- 1.4.3
-- 1.5.3
-- 1.6
+- "1.13"
+- "1.14"
 - tip
 before_install:
   - go get github.com/axw/gocov/gocov
